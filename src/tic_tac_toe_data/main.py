@@ -7,10 +7,10 @@ def print_json(gs: GameState, outf: TextIO):
     choices = ""
     if gs.children:  
         for key in gs.children:
-            choices = choices + f"{key}:{gs.children[key]}, "
+            choices = choices + f"{key}:{gs.children[key].game_state_id}, "
         choices = choices.strip()[:-1]
 
-    print(f"{{gameState={gs.game_state_id}, winCode='{gs.win_code}', choices={{{choices}}}}}", file=outf)
+    print(f"{{gameState={gs.game_state_id}, winCode='{gs.win_code}', choices={{{choices}}} cells={gs.cells} }}", file=outf)
     
     return
 

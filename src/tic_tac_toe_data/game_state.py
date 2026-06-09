@@ -60,8 +60,8 @@ def create_solution_tree() -> GameState:
 
     # create the remaining nodes in the game tree.
     # do a sanity check that there are 9! + 1 nodes.
-    actual: int = create_children(root) - 1
-    correct: int = math.factorial(9)
+    actual: int = create_children(root)
+    correct: int =  986410 # 1 + sum (n = 0 to 8) (9!/n!)
     if actual != correct:
         msg = f"incorrect number of children. correct {correct}, actual: {actual}"
         raise RuntimeError(msg)
@@ -74,23 +74,28 @@ def create_solution_tree() -> GameState:
 # returns the next available game state id.
 def create_children(parent: GameState) -> int:
 
+    #print("create_children")
+
     child_id: int = parent.game_state_id + 1
 
     # iterate through each cell
     for cell_number in range(9):
+        #print(f"create_children: cell_number {cell_number}")
         # ignore any cell not open
         if parent.cells[cell_number] == constants.OPEN_CELL:
+            #print("creating child")
             # claim the cell for the acting player
             child: GameState = GameState()
             child.parent = parent
             parent.children[cell_number] = child
+            child.children = {}
             child.game_state_id = child_id
+            print(f"{parent.game_state_id} takes {child.game_state_id} as cell number {cell_number}")
             child.acting_player = opposite_player(parent.acting_player)
             # win codes are assigned after the game tree has been constructed.
             child.win_code = constants.IN_PROGRESS
             # copy parents cells and then modify the move creating this node.
-            for i in range(9):
-                child.cells.append(parent.cells[i])
+            child.cells = list(parent.cells)
             child.cells[cell_number] = parent.acting_player
             child_id: int = create_children(child)
 
