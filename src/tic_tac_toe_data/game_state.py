@@ -66,6 +66,7 @@ def create_solution_tree() -> GameState:
         msg = f"incorrect number of children. correct {correct}, actual: {actual}"
         raise RuntimeError(msg)
     
+    # assigning win codes is easier when the game tree has been comoleted.
     assign_win_codes(root)
 
     return root
@@ -74,16 +75,12 @@ def create_solution_tree() -> GameState:
 # returns the next available game state id.
 def create_children(parent: GameState) -> int:
 
-    #print("create_children")
-
     child_id: int = parent.game_state_id + 1
 
     # iterate through each cell
     for cell_number in range(9):
-        #print(f"create_children: cell_number {cell_number}")
         # ignore any cell not open
         if parent.cells[cell_number] == constants.OPEN_CELL:
-            #print("creating child")
             # claim the cell for the acting player
             child: GameState = GameState()
             child.parent = parent
